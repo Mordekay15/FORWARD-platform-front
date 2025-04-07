@@ -1,0 +1,175 @@
+.adminContainer {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #99ff48; /* Light gray background */
+  border-radius: 10px; /* Smoother corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+}
+
+.adminTitle {
+  font-size: 2.5rem; /* Larger title */
+  color: #000; /* Black title */
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600; /* Bolder weight */
+}
+
+.uploadForm {
+  margin-bottom: 2rem;
+  padding: 1.5rem; /* More padding */
+  background: white;
+  border-radius: 10px; /* Smoother corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* More spacing */
+}
+
+.formLabel {
+  font-weight: 600; /* Semi-bold */
+  margin-bottom: 0.5rem;
+  color: #333; /* Dark gray */
+}
+
+.fileInput {
+  padding: 0.8rem;
+  border: 2px solid #ddd; /* Thicker border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.fileInput:focus {
+  border-color: #34c759; /* Green focus */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.1); /* Green glow */
+}
+
+.selectInput {
+  padding: 0.8rem;
+  border: 2px solid #ddd; /* Thicker border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.selectInput:focus {
+  border-color: #34c759; /* Green focus */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.1); /* Green glow */
+}
+
+.submitButton {
+  background-color: #99ff48; /* Green primary */
+  color: #000; /* Black text */
+  padding: 1rem;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  font-weight: 600; /* Bold text */
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #2ecc71; /* Darker green */
+  transform: translateY(-2px); /* Lift effect */
+}
+
+.logoutButton {
+  background-color: #333; /* Dark gray */
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  font-weight: 600; /* Bold text */
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.logoutButton:hover {
+  background-color: #000; /* Pure black */
+  transform: translateY(-2px); /* Lift effect */
+}
+
+.errorMessage {
+  color: #dc3545; /* Red error */
+  background: #f8d7da; /* Light red */
+  padding: 1rem;
+  border-radius: 8px; /* Rounded corners */
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.successMessage {
+  color: #34c759; /* Green success */
+  background: #e8f5e9; /* Light green */
+  padding: 1rem;
+  border-radius: 8px; /* Rounded corners */
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.pdfSection {
+  margin-top: 2rem;
+  padding: 1.5rem; /* More padding */
+  background: white;
+  border-radius: 10px; /* Smoother corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+}
+
+.pdfTitle {
+  font-size: 2rem; /* Larger title */
+  color: #000; /* Black title */
+  margin-bottom: 1.5rem;
+  font-weight: 600; /* Bolder weight */
+}
+
+.weekSection {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa; /* Light gray */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.weekTitle {
+  font-size: 1.5rem; /* Larger title */
+  color: black; /* Green accent */
+  margin-bottom: 1rem;
+  font-weight: 600; /* Bolder weight */
+}
+
+.pdfList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pdfListItem {
+  padding: 1rem 0; /* More padding */
+  border-bottom: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.pdfListItem:hover {
+  background: #f8f9fa; /* Light hover */
+}
+
+.pdfLink {
+  color: black; /* Green links */
+  text-decoration: none;
+  font-weight: 500; /* Medium weight */
+  transition: all 0.3s ease;
+}
+
+.pdfLink:hover {
+  color: #99ff48; /* Darker green */
+  text-decoration: underline;
+  padding-left: 5px; /* Interactive effect */
+}
