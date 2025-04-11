@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from './LoginPage.module.css';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,11 @@ const LoginPage = () => {
   const [jobs, setJobs] = useState([]);
   const [teams, setTeams] = useState([]);
   const navigate = useNavigate();
+  const { token, login } = useAuth();
+
+  useEffect(() => {
+    if (token) navigate('/member');
+  }, [token, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +52,9 @@ const LoginPage = () => {
       );
 
       const role = res.data.user?.role;
+      const token = res.data.token;
+      sessionStorage.setItem('authToken', token);
+      login(token)
       if (role === "ADMIN") {
         navigate("/admin");
       } else if (role === "PARTICIPANT") {
@@ -53,6 +62,7 @@ const LoginPage = () => {
       } else {
         setError("Invalid role received: " + role);
       }
+      
     } catch (err) {
       setError("Invalid email or password");
     }
