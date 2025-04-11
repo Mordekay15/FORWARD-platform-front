@@ -54,7 +54,7 @@ const LoginPage = () => {
       const role = res.data.user?.role;
       const token = res.data.token;
       sessionStorage.setItem('authToken', token);
-      login(token)
+      login(token);
       if (role === "ADMIN") {
         navigate("/admin");
       } else if (role === "PARTICIPANT") {
