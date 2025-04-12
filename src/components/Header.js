@@ -13,6 +13,7 @@ function Header() {
                             </a>
                         </li>
                         <div className={styles.rightNav}>
+                            <li className={styles.navEl}><a href="/member">Member</a></li>
                             <li className={styles.navEl}><a href="/about">About</a></li>
                             <li className={styles.navEl}><a href="/FAQ">FAQ</a></li>
                         </div>

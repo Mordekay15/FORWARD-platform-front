@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styles from './MemberPage.module.css';
+import backgroundImg from '../fav/background.avif';
+import { useAuth } from '../context/AuthContext';
+import Loading from '../components/Loading';
 
 const TeamDetailPage = () => {
   const [team, setTeam] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const {user} = useAuth();
+  const teamId = user?.teamId;
+  
   // Team editing states
   const [editing, setEditing] = useState(false);
   const [updatedTeam, setUpdatedTeam] = useState({
@@ -24,10 +29,9 @@ const TeamDetailPage = () => {
   const [newJob, setNewJob] = useState({
     title: "",
     description: "",
-    teamId: "164a1106-05e7-4e54-9060-a1100f4deabb"
+    teamId: user?.teamId
   });
 
-  const teamId = "164a1106-05e7-4e54-9060-a1100f4deabb";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +42,9 @@ const TeamDetailPage = () => {
         ]);
 
         const teamData = await teamRes.json();
+        console.log(teamData);
         const jobsData = await jobsRes.json();
+        console.log(jobsData);
 
         setTeam(teamData);
         setJobs(Array.isArray(jobsData) ? jobsData : []);
@@ -174,7 +180,7 @@ const TeamDetailPage = () => {
     }
   };
 
-  if (loading) return <p>Loading team data...</p>;
+  if (loading) return <Loading/>;
   if (error) return <p className="error">Error: {error}</p>;
   if (!team) return <p>No team found.</p>;
 

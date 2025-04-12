@@ -1,3 +1,100 @@
-.teamContainer{
-  height: 680px;
+.teamContainer {
+  background: url('../fav/background.avif') center/cover no-repeat fixed;
+  min-height: 100vh;
+  padding: 2rem;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.teamInfo,
+.editTeamForm,
+.jobForm,
+.jobCard {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgb(151, 247, 71);
+  color: black;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: rgb(151, 247, 71);
+}
+
+input[type="text"],
+input[type="file"],
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(151, 247, 71);
+}
+
+/* Form Actions */
+.formActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.logoPreview {
+  max-width: 150px;
+  height: auto;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.participantsList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.participantsList li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.roleBadge {
+  background-color: #10b981;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 1rem;
+  color: white;
+  font-size: 0.875rem;
+}
+
+.jobsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+h1, h2, h3 {
+  margin-bottom: 1rem;
+  color: #fff;
 }

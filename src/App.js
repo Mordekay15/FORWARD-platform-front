@@ -17,6 +17,7 @@ function App() {
         <Route path="/member" element={<MemberPage />} />
         <Route path="/teams" element={<TeamsPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/about" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

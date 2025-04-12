@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from './LoginPage.module.css';
 import { useAuth } from '../context/AuthContext';
+import { userLogin } from "../api/userApi";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -42,19 +43,13 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
+      const res = await userLogin(email, password);
+      console.log(res)
       const role = res.data.user?.role;
       const token = res.data.token;
+      const user = res.data.user;
       sessionStorage.setItem('authToken', token);
-      login(token);
+      login({token,user });
       if (role === "ADMIN") {
         navigate("/admin");
       } else if (role === "PARTICIPANT") {
