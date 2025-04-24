@@ -26,12 +26,10 @@ const LoginPage = () => {
           axios.get("http://localhost:3000/api/teams")
         ]);
 
-        // Ensure data is always an array
         setJobs(Array.isArray(jobsRes?.data) ? jobsRes.data : []);
         setTeams(Array.isArray(teamsRes?.data) ? teamsRes.data : []);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("Failed to fetch data.");
       }
     };
 

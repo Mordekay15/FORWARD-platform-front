@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import styles from './AdminPage.module.css'; // Import CSS module
+import styles from './AdminPage.module.css';
 
 const AdminPage = () => {
   const [pdfs, setPdfs] = useState([]);

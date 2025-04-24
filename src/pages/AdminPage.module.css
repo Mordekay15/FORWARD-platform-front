@@ -1,116 +1,106 @@
+
 .adminContainer {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #99ff48; /* Light gray background */
-  border-radius: 10px; /* Smoother corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+  background: url('../fav/background.avif') center/cover no-repeat fixed; 
+  min-height: 100vh; 
+  padding: 2rem; 
+  color: #fff;
+  font-family: 'Inter', sans-serif; 
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .adminTitle {
-  font-size: 2.5rem; /* Larger title */
-  color: #000; /* Black title */
-  text-align: center;
+  font-size: 2.5rem; 
+  color: #fff; 
+  text-align: left;
   margin-bottom: 2rem;
-  font-weight: 600; /* Bolder weight */
+  font-weight: 600;
 }
 
 .uploadForm {
-  margin-bottom: 2rem;
-  padding: 1.5rem; /* More padding */
-  background: white;
-  border-radius: 10px; /* Smoother corners */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+  background: rgba(0, 0, 0, 0.6); 
+  border-radius: 1rem; 
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* More spacing */
+  gap: 1.5rem; 
 }
 
 .formLabel {
-  font-weight: 600; /* Semi-bold */
+  font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #333; /* Dark gray */
+  color: #ccc;
 }
 
-.fileInput {
-  padding: 0.8rem;
-  border: 2px solid #ddd; /* Thicker border */
-  border-radius: 8px; /* Rounded corners */
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.fileInput:focus {
-  border-color: #34c759; /* Green focus */
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.1); /* Green glow */
-}
-
+.fileInput,
 .selectInput {
   padding: 0.8rem;
-  border: 2px solid #ddd; /* Thicker border */
-  border-radius: 8px; /* Rounded corners */
+  border: 2px solid #ddd;
+  border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
 
+.fileInput:focus,
 .selectInput:focus {
-  border-color: #34c759; /* Green focus */
+  border-color: #99ff48;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.1); /* Green glow */
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.1);
 }
 
 .submitButton {
-  background-color: #99ff48; /* Green primary */
-  color: #000; /* Black text */
+  background-color: rgb(151, 247, 71); 
+  color: black;
   padding: 1rem;
   border: none;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600; /* Bold text */
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .submitButton:hover {
-  background-color: #2ecc71; /* Darker green */
-  transform: translateY(-2px); /* Lift effect */
+  background-color: #34c759;
+  transform: translateY(-2px); 
 }
 
 .logoutButton {
-  background-color: #333; /* Dark gray */
+  background-color: #333;
   color: white;
   padding: 1rem;
   border: none;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600; /* Bold text */
+  font-weight: 600;
   transition: all 0.3s ease;
   margin-bottom: 1rem;
 }
 
 .logoutButton:hover {
-  background-color: #000; /* Pure black */
-  transform: translateY(-2px); /* Lift effect */
+  background-color: #000;
+  transform: translateY(-2px);
 }
 
 .errorMessage {
-  color: #dc3545; /* Red error */
-  background: #f8d7da; /* Light red */
+  color: #dc3545;
+  background: #f8d7da;
   padding: 1rem;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 8px;
   margin-bottom: 1rem;
   text-align: center;
   font-weight: 500;
 }
 
 .successMessage {
-  color: #34c759; /* Green success */
-  background: #e8f5e9; /* Light green */
+  color: #34c759;
+  background: #e8f5e9;
   padding: 1rem;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 8px;
   margin-bottom: 1rem;
   text-align: center;
   font-weight: 500;
@@ -118,31 +108,31 @@
 
 .pdfSection {
   margin-top: 2rem;
-  padding: 1.5rem; /* More padding */
-  background: white;
-  border-radius: 10px; /* Smoother corners */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .pdfTitle {
-  font-size: 2rem; /* Larger title */
-  color: #000; /* Black title */
+  font-size: 2rem;
+  color: #fff;
   margin-bottom: 1.5rem;
-  font-weight: 600; /* Bolder weight */
+  font-weight: 600;
 }
 
 .weekSection {
   margin-bottom: 2rem;
   padding: 1rem;
-  background: #f8f9fa; /* Light gray */
-  border-radius: 8px; /* Rounded corners */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
 }
 
 .weekTitle {
-  font-size: 1.5rem; /* Larger title */
-  color: black; /* Green accent */
+  font-size: 1.5rem;
+  color: #fff;
   margin-bottom: 1rem;
-  font-weight: 600; /* Bolder weight */
+  font-weight: 600;
 }
 
 .pdfList {
@@ -152,24 +142,53 @@
 }
 
 .pdfListItem {
-  padding: 1rem 0; /* More padding */
+  padding: 1rem 0;
   border-bottom: 1px solid #eee;
   transition: all 0.3s ease;
 }
 
 .pdfListItem:hover {
-  background: #f8f9fa; /* Light hover */
+  background: rgba(255, 255, 255, 0.1); 
 }
 
 .pdfLink {
-  color: black; /* Green links */
+  color: white;
   text-decoration: none;
-  font-weight: 500; /* Medium weight */
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .pdfLink:hover {
-  color: #99ff48; /* Darker green */
+  color: #99ff48;
   text-decoration: underline;
-  padding-left: 5px; /* Interactive effect */
+  padding-left: 5px; 
+}
+
+.weekTitle {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.participantsList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.participantsList li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.roleBadge {
+  background-color: #10b981;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 1rem;
+  color: white;
+  font-size: 0.875rem;
 }

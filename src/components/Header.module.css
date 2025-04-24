@@ -42,4 +42,18 @@
     text-decoration: underline;
   }
   
+  .navElLogout a{
+    text-decoration: none;
+    color: rgb(255, 255, 255); 
+    font-weight: bold;
+    transition: color 0.2s ease;
+    font-size: 30px;
+    font-style:;
+  }
+  
+  .navElLogout a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+  
   
