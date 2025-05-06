@@ -142,7 +142,7 @@ const TeamDetailPage = () => {
       }
   
       const updatedData = await updateTeam({
-        teamId,
+        id: teamId,
         name: updatedTeam.name,
         description: updatedTeam.description,
         logo: logoUrl,

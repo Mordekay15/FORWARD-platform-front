@@ -27,7 +27,7 @@
 }
 
 .teamInfo div {
-  flex: 1; /* Allow this div to take up remaining space */
+  flex: 1;
 }
 
 h1, h2, h3 {
@@ -35,10 +35,9 @@ h1, h2, h3 {
   color: #fff;
 }
 
-/* Description styling */
 .teamInfo .description {
-  margin-top: 1rem; /* Adds space between title and description */
-  color: #ccc; /* Slightly lighter color for the description */
+  margin-top: 1rem; 
+  color: #ccc; 
   font-size: 1rem;
 }
 
@@ -58,7 +57,6 @@ button:hover {
   background-color: rgb(151, 247, 71);
 }
 
-/* Inputs */
 input[type="text"],
 input[type="file"],
 textarea {
@@ -77,21 +75,18 @@ textarea:focus {
   box-shadow: 0 0 0 2px rgb(151, 247, 71);
 }
 
-/* Error styling */
 .error {
   color: red;
   font-size: 0.875rem;
   margin-top: 1rem;
 }
 
-/* Form actions */
 .formActions {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
 }
 
-/* Logo preview */
 .logoPreview {
   max-width: 150px;
   height: auto;
@@ -99,7 +94,6 @@ textarea:focus {
   border-radius: 0.5rem;
 }
 
-/* Participants List */
 .participantsList {
   list-style: none;
   padding: 0;
@@ -122,14 +116,12 @@ textarea:focus {
   font-size: 0.875rem;
 }
 
-/* Job grid layout */
 .jobsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
-/* Job card styling */
 .jobCard {
   background: rgba(0, 0, 0, 0.6);
   border-radius: 1rem;

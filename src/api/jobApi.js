@@ -7,6 +7,12 @@ export const getJobsByTeamId = async (teamId) => {
   return response.data;
 };
 
+export const getAllJobs = async () => {
+  const response = await axios.get(BASE_URL);
+  return response.data;
+};
+
+
 export const createJob = async (jobData) => {
     const res = await axios.post('http://localhost:3000/api/jobs', jobData);
     return res.data;

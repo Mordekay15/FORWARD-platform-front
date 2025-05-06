@@ -8,6 +8,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Source from "./pages/Source";
+import Teams from './pages/Teams';
+import TeamPage from './pages/TeamPage';
+import Positions from './pages/Positions';
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -16,7 +20,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/sources" element={<Source />} />
+          
+          <Route path="/about" element={<AdminPage />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/teams/:teamId" element={<TeamPage />} />
+          <Route path="/positions" element={<Positions />} />
+
           <Route path="/" element={<Navigate to="/member" replace />} />
+
           <Route
             path="/member"
             element={
@@ -25,11 +37,25 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/teams" element={<TeamsPage />} />
-          <Route path="/sources" element={<Source />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/about" element={<AdminPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
+
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+          } />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
       <Footer />

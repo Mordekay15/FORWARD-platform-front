@@ -15,7 +15,6 @@ h1 {
   margin-bottom: 1rem;
 }
 
-/* Filter Section */
 .filterSection {
   background: rgba(0, 0, 0, 0.6);
   padding: 1.5rem;
@@ -54,7 +53,6 @@ h1 {
   box-shadow: 0 0 0 2px rgb(151, 247, 71);
 }
 
-/* Button styles */
 button {
   padding: 0.6rem 1.2rem;
   border: none;
@@ -70,13 +68,11 @@ button:hover {
   background-color: #a4e454;
 }
 
-/* Error Message */
 .error {
   color: red;
   font-size: 0.875rem;
 }
 
-/* PDF List Styling */
 .pdfsList {
   display: flex;
   flex-direction: column;

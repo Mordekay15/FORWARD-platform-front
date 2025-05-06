@@ -7,7 +7,28 @@ export const getTeamById = async (teamId) => {
   return response.data;
 };
 
-export const updateTeam = async ({ teamId, name, description, logo }) => {
+export const getAllTeams = async () => {
+  const response = await axios.get("http://localhost:3000/api/teams");
+  return response.data;
+};
+
+export const updateTeam = async (editingTeam) => {
+
+  const response = await axios.put(
+    BASE_URL,
+    {
+      teamId: editingTeam.id,
+      name: editingTeam.name,
+      description: editingTeam.description,
+      logo: editingTeam.logo,
+    },
+    { headers: { 'Content-Type': 'application/json' } }
+  );
+
+  return response.data;
+};
+
+export const deleteTeam = async ({ teamId, name, description, logo }) => {
   const response = await axios.put(
     BASE_URL,
     { teamId, name, description, logo },
