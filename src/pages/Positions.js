@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllJobs } from '../api/jobApi';
-import Loading from '../components/Loading';
+import Loading from '../components/Loading.js';
 import styles from './Positions.module.css';
 
 const Positions = () => {

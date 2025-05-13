@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import styles from './LoginPage.module.css';
 import { useAuth } from '../context/AuthContext';
 import { userLogin } from "../api/userApi";
 import defImg from '../fav/defImg.avif';
-
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -48,8 +47,8 @@ const LoginPage = () => {
       const token = res.data.token;
       const user = res.data.user;
       sessionStorage.setItem('authToken', token);
-      login({token, user });
-      
+      login({ token, user });
+
       if (role === "ADMIN") {
         navigate("/admin");
       } else if (role === "PARTICIPANT") {
@@ -66,22 +65,21 @@ const LoginPage = () => {
     if (!Array.isArray(teams) || !teamId) {
       return defImg;
     }
-  
+
     const team = teams.find(t => t.id === teamId);
-  
+
     if (!team || !team.logo || team.logo.trim() === "") {
       return defImg;
     }
-  
+
     return team.logo;
   };
-  
 
   return (
     <div className={styles.adminContainer}>
       <div className={`${styles.blockSection} ${styles.loginBlock}`}>
         <h2 className={styles.adminTitle}>Forward Community Login</h2>
-        
+
         {error && <div className={styles.errorMessage}>{error}</div>}
 
         <form onSubmit={handleLogin} className={styles.form}>
@@ -105,6 +103,10 @@ const LoginPage = () => {
             Login
           </button>
         </form>
+
+        <p className={styles.registerPrompt}>
+          Don't have an account? <Link to="/register">Register here</Link>
+        </p>
       </div>
 
       {jobs.length > 0 && (

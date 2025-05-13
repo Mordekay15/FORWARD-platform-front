@@ -1,23 +1,29 @@
 import { useState, useEffect } from "react";
 import styles from './AdminPage.module.css';
-import { getAllUsers, createUser, deleteUser, updateUser } from "../api/userApi";
+import { getAllUsers, createUser, deleteUser, updateUser, approveUser, rejectUser } from "../api/userApi";
 import { getAllTeams, updateTeam, uploadLogo, deleteTeam, getTeamById } from "../api/teamApi";
 import { uploadPdf } from "../api/pdfApi";
 import axios from "axios";
 import Loading from '../components/Loading';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
   // State declarations
+  const { logout } = useAuth();
   const [users, setUsers] = useState([]);
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const [approvedUsers, setApprovedUsers] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filteredPendingUsers, setFilteredPendingUsers] = useState([]);
+  const [filteredApprovedUsers, setFilteredApprovedUsers] = useState([]);
   const [filteredTeams, setFilteredTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState(null);
   const [weekNumber, setWeekNumber] = useState(1);
   const [logoFile, setLogoFile] = useState(null);
-  const [userSearch, setUserSearch] = useState("");
+  const [pendingUserSearch, setPendingUserSearch] = useState("");
+  const [approvedUserSearch, setApprovedUserSearch] = useState("");
   const navigate = useNavigate();
   const [teamSearch, setTeamSearch] = useState("");
 
@@ -51,25 +57,38 @@ const AdminPage = () => {
 
   // Filter users and teams when search changes
   useEffect(() => {
-    const filteredUsers = users.map(user => {
+    const filteredPending = pendingUsers.map(user => {
       const team = teams.find(t => t.id === user.teamId);
       return {
         ...user,
         teamName: team ? team.name : "No team"
       };
     }).filter(user => 
-      user.email.toLowerCase().includes(userSearch.toLowerCase()) ||
-      user.role.toLowerCase().includes(userSearch.toLowerCase()) ||
-      user.teamName.toLowerCase().includes(userSearch.toLowerCase())
+      user.email.toLowerCase().includes(pendingUserSearch.toLowerCase()) ||
+      user.role.toLowerCase().includes(pendingUserSearch.toLowerCase()) ||
+      (user.teamName && user.teamName.toLowerCase().includes(pendingUserSearch.toLowerCase()))
     );
-    setFilteredUsers(filteredUsers);
+    setFilteredPendingUsers(filteredPending);
+
+    const filteredApproved = approvedUsers.map(user => {
+      const team = teams.find(t => t.id === user.teamId);
+      return {
+        ...user,
+        teamName: team ? team.name : "No team"
+      };
+    }).filter(user => 
+      user.email.toLowerCase().includes(approvedUserSearch.toLowerCase()) ||
+      user.role.toLowerCase().includes(approvedUserSearch.toLowerCase()) ||
+      (user.teamName && user.teamName.toLowerCase().includes(approvedUserSearch.toLowerCase()))
+    );
+    setFilteredApprovedUsers(filteredApproved);
 
     const filteredTeams = teams.filter(team => 
       team.name.toLowerCase().includes(teamSearch.toLowerCase()) ||
       (team.description && team.description.toLowerCase().includes(teamSearch.toLowerCase()))
     );
     setFilteredTeams(filteredTeams);
-  }, [userSearch, teamSearch, users, teams]);
+  }, [pendingUserSearch, approvedUserSearch, teamSearch, pendingUsers, approvedUsers, teams]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -80,7 +99,12 @@ const AdminPage = () => {
         getAllTeams()
       ]);
       
+      const pending = usersData.filter(user => user.approvalStatus === "PENDING");
+      const approved = usersData.filter(user => user.approvalStatus === "APPROVE");
+      
       setUsers(usersData);
+      setPendingUsers(pending);
+      setApprovedUsers(approved);
       setTeams(teamsData);
     } catch (err) {
       console.error("Error loading data:", err);
@@ -137,6 +161,34 @@ const AdminPage = () => {
     } catch (err) {
       console.error("Create user error:", err);
       setError(err.response?.data?.message || "Failed to create user.");
+    }
+  };
+
+  const handleApproveUser = async (userId) => {
+    setError("");
+    setSuccess("");
+
+    try {
+      await approveUser(userId);
+      setSuccess("User approved successfully!");
+      fetchData();
+    } catch (err) {
+      console.error("Approve user error:", err);
+      setError("Failed to approve user. Please try again.");
+    }
+  };
+
+  const handleRejectUser = async (userId) => {
+    setError("");
+    setSuccess("");
+
+    try {
+      await rejectUser(userId);
+      setSuccess("User rejected successfully!");
+      fetchData();
+    } catch (err) {
+      console.error("Reject user error:", err);
+      setError("Failed to reject user. Please try again.");
     }
   };
 
@@ -252,14 +304,16 @@ const AdminPage = () => {
   };
 
   const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    logout();
     navigate('/login');
   };
 
-  const handleUserSearch = (e) => {
-    setUserSearch(e.target.value);
+  const handlePendingUserSearch = (e) => {
+    setPendingUserSearch(e.target.value);
+  };
+
+  const handleApprovedUserSearch = (e) => {
+    setApprovedUserSearch(e.target.value);
   };
 
   const handleTeamSearch = (e) => {
@@ -318,16 +372,16 @@ const AdminPage = () => {
         </form>
       </div>
 
-      {/* Users Section */}
+      {/* Pending Users Section */}
       <div className={styles.usersSection}>
         <div className={styles.sectionHeader}>
-          <h3 className={styles.sectionTitle}>Users Management</h3>
+          <h3 className={styles.sectionTitle}>Pending User Approvals</h3>
           <div className={styles.searchContainer}>
             <input
               type="text"
-              placeholder="Search users..."
-              value={userSearch}
-              onChange={handleUserSearch}
+              placeholder="Search pending users..."
+              value={pendingUserSearch}
+              onChange={handlePendingUserSearch}
               className={styles.searchInput}
             />
             <button 
@@ -340,8 +394,8 @@ const AdminPage = () => {
         </div>
         
         <div className={styles.usersTable}>
-          {filteredUsers.length === 0 ? (
-            <p className={styles.noItems}>No users found</p>
+          {filteredPendingUsers.length === 0 ? (
+            <p className={styles.noItems}>No pending users found</p>
           ) : (
             <table className={styles.table}>
               <thead>
@@ -349,15 +403,87 @@ const AdminPage = () => {
                   <th>Email</th>
                   <th>Role</th>
                   <th>Team</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((user) => (
+                {filteredPendingUsers.map((user) => (
                   <tr key={user.id}>
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                     <td>{user.teamName}</td>
+                    <td>{user.approvalStatus}</td>
+                    <td className={styles.actionsCell}>
+                      <button 
+                        onClick={() => handleApproveUser(user.id)} 
+                        className={styles.approveButton}
+                      >
+                        Approve
+                      </button>
+                      <button 
+                        onClick={() => handleRejectUser(user.id)} 
+                        className={styles.rejectButton}
+                      >
+                        Reject
+                      </button>
+                      <button 
+                        onClick={() => openEditUserModal(user)} 
+                        className={styles.editButton}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteUser(user.id)} 
+                        className={styles.deleteButton}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
+      {/* Approved Users Section */}
+      <div className={styles.usersSection}>
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>Approved Users</h3>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search approved users..."
+              value={approvedUserSearch}
+              onChange={handleApprovedUserSearch}
+              className={styles.searchInput}
+            />
+          </div>
+        </div>
+        
+        <div className={styles.usersTable}>
+          {filteredApprovedUsers.length === 0 ? (
+            <p className={styles.noItems}>No approved users found</p>
+          ) : (
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Team</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredApprovedUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.email}</td>
+                    <td>{user.role}</td>
+                    <td>{user.teamName}</td>
+                    <td>{user.approvalStatus}</td>
                     <td className={styles.actionsCell}>
                       <button 
                         onClick={() => openEditUserModal(user)} 
@@ -642,7 +768,6 @@ const AdminPage = () => {
           </div>
         </div>
       )}
-
 
       {/* Logout Button */}
       <button onClick={handleLogout} className={styles.logoutButton}>

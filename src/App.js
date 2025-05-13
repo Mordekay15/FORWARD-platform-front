@@ -12,20 +12,23 @@ import Teams from './pages/Teams';
 import TeamPage from './pages/TeamPage';
 import Positions from './pages/Positions';
 import ProfilePage from "./pages/ProfilePage";
+import HomePage from "./pages/HomePage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
     <AuthProvider>
-      <Header />
       <Router>
+      <Header />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/sources" element={<Source />} />
           
           <Route path="/about" element={<AdminPage />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/teams/:teamId" element={<TeamPage />} />
           <Route path="/positions" element={<Positions />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           <Route path="/" element={<Navigate to="/member" replace />} />
 
@@ -55,10 +58,19 @@ function App() {
             }
           />
 
+          <Route
+            path="/sources"
+            element={
+              <ProtectedRoute>
+                <Source />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
       <Footer />
+      </Router>
     </AuthProvider>
   );
 }

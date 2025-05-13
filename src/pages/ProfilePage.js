@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ProfilePage.module.css';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
+  const { logout } = useAuth();
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
@@ -18,9 +20,7 @@ const ProfilePage = () => {
   }, []);
 
   const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    logout();
     navigate('/login');
   };
 

@@ -40,15 +40,21 @@
   padding: 0;
 }
 
-.navList li a {
+.navList li a,
+.navList li button {
   text-decoration: none;
+  background: none;
+  border: none;
   color: rgb(151, 247, 71);
   font-weight: 600;
   font-size: 1rem;
+  cursor: pointer;
   transition: color 0.2s ease, text-shadow 0.2s ease;
+  font-family: inherit;
 }
 
-.navList li a:hover {
+.navList li a:hover,
+.navList li button:hover {
   color: white;
   text-shadow: 0 0 6px rgb(151, 247, 71);
 }
@@ -69,7 +75,8 @@
     gap: 1rem;
   }
 
-  .navList li a {
+  .navList li a,
+  .navList li button {
     font-size: 0.95rem;
   }
 

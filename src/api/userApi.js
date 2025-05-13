@@ -36,8 +36,14 @@ export const getAllUsers = async () => {
 export const createUser = async (email: string, password: string, role: string, teamId?: number) => {
   try {
     const response = await axios.post(
-      API_BASE_URL,
-      { email, password, role, teamId },
+      'http://localhost:3000/api/users',
+      {
+        email,
+        password,
+        role,
+        teamId,
+        approvalStatus: "PENDING"
+      },
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
@@ -46,6 +52,45 @@ export const createUser = async (email: string, password: string, role: string, 
     return response.data;
   } catch (error) {
     console.error('Error creating user:', error);
+    throw error;
+  }
+};
+
+export const approveUser = async (id) => {
+  try {
+    const response = await axios.put(
+      'http://localhost:3000/api/users',
+      {
+        id,
+        approvalStatus: "APPROVE",
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error approving user:', error);
+    throw error;
+  }
+};
+export const rejectUser = async (id) => {
+  try {
+    const response = await axios.put(
+      'http://localhost:3000/api/users',
+      {
+        id,
+        approvalStatus: "REJECT",
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error rejecting user:', error);
     throw error;
   }
 };
