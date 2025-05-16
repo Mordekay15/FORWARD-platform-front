@@ -1,0 +1,116 @@
+.profileContainer {
+  background: url('../fav/background.avif') center/cover no-repeat fixed;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.profileHeader {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.profileHeader h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.profileHeader p {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+.passwordForm {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+  margin-top: 1rem;
+}
+
+.passwordForm h2 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.passwordForm label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.passwordForm input[type="password"] {
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+}
+
+.passwordForm input[type="password"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(151, 247, 71);
+}
+
+.error {
+  color: red;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.success {
+  color: lime;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgb(151, 247, 71);
+  color: black;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+button:hover {
+  background-color: #d8ff9a;
+}
+
+.logoutButton {
+  padding: 0.5rem 1rem;
+  background-color: rgb(255, 75, 75);
+  font-size: 1rem;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 2rem;
+}
+
+.logoutButton:hover {
+  background-color: rgb(255, 25, 25);
+}

@@ -1,0 +1,113 @@
+.footer {
+  background-color: black;
+  color: rgb(151, 247, 71);
+  padding: 20px 0;
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.topBlock {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(151, 247, 71, 0.3);
+}
+
+.links {
+  margin: 10px 0;
+}
+
+.link {
+  text-decoration: none;
+  color: rgb(151, 247, 71);
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.contact {
+  margin-top: 10px;
+  text-align: center;
+  color: rgb(151, 247, 71);
+  font-size: 14px;
+}
+
+.sponsorImages {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  padding: 1rem;
+  border-radius: 8px;
+  justify-content: center;
+}
+
+.imageBox {
+  width: 120px; 
+}
+
+.SponsoredBy {
+  width: 80px;
+  height: 80px;
+  gap: 20px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.sponsorImages {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.imageBox {
+  width: 120px; 
+  height: auto;
+}
+
+.SponsoredBy {
+  width: 100%; 
+  height: auto;
+}
+.socialIcons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ContactUs {
+  width: 30px;
+  height: auto;
+}
+
+.emailData {
+  text-align: left;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.emailData a {
+  color: rgb(151, 247, 71);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.emailData a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.contactImages {
+  margin-top: 10px;
+}

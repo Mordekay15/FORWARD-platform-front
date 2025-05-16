@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from './MemberPage.module.css';
+import { getTeamById, updateTeam, uploadLogo } from "../api/teamApi";
+import { getJobsByTeamId, createJob } from "../api/jobApi";
+import { useAuth } from '../context/AuthContext';
+import Loading from '../components/Loading';
+import Error from '../components/Error';
+import { useNavigate } from 'react-router-dom';
 
 const TeamDetailPage = () => {
   const [team, setTeam] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Team editing states
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const teamId = user?.teamId;
+  
   const [editing, setEditing] = useState(false);
   const [updatedTeam, setUpdatedTeam] = useState({
     name: "",
@@ -15,44 +23,72 @@ const TeamDetailPage = () => {
     logo: ""
   });
 
-  // File upload states
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState("");
 
-  // Job creation states
   const [showJobForm, setShowJobForm] = useState(false);
   const [newJob, setNewJob] = useState({
     title: "",
     description: "",
-    teamId: "164a1106-05e7-4e54-9060-a1100f4deabb"
+    teamId: user?.teamId
   });
 
-  const teamId = "164a1106-05e7-4e54-9060-a1100f4deabb";
+  const fetchData = useCallback(async () => {
+    if (!teamId) {
+      setLoading(false);
+      setError("No team assigned to this user");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const [teamData, jobsData] = await Promise.all([
+        getTeamById(teamId),
+        getJobsByTeamId(teamId),
+      ]);
+
+      if (!teamData) {
+        throw new Error("Team not found");
+      }
+
+      setTeam(teamData);
+      setJobs(Array.isArray(jobsData) ? jobsData : []);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to fetch data');
+    } finally {
+      setLoading(false);
+    }
+  }, [teamId]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const loadData = async () => {
       try {
-        const [teamRes, jobsRes] = await Promise.all([
-          fetch(`http://localhost:3000/api/teams?teamId=${teamId}`),
-          fetch(`http://localhost:3000/api/jobs?teamId=${teamId}`)
-        ]);
-
-        const teamData = await teamRes.json();
-        const jobsData = await jobsRes.json();
-
-        setTeam(teamData);
-        setJobs(Array.isArray(jobsData) ? jobsData : []);
+        await fetchData();
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        if (isMounted) {
+          console.error(err);
+          setError(err.message || 'Failed to fetch data');
+          setLoading(false);
+        }
       }
     };
 
-    fetchData();
-  }, [teamId]);
+    if (isMounted) {
+      loadData();
+    }
 
-  // Team Edit Functions
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [fetchData]);
+
   const handleEditToggle = () => {
     setEditing((prev) => !prev);
     setUpdatedTeam({
@@ -62,6 +98,7 @@ const TeamDetailPage = () => {
     });
     setLogoFile(null);
     setLogoPreview("");
+    setError(null);
   };
 
   const handleTeamInputChange = (e) => {
@@ -76,7 +113,6 @@ const TeamDetailPage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Client-side validation
     if (!['image/png', 'image/jpeg'].includes(file.type)) {
       setError('Only PNG/JPEG images allowed');
       return;
@@ -90,52 +126,40 @@ const TeamDetailPage = () => {
     setLogoFile(file);
     setLogoPreview(URL.createObjectURL(file));
     setUpdatedTeam(prev => ({ ...prev, logo: file.name }));
+    setError(null);
   };
 
   const handleSaveChanges = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      
       let logoUrl = updatedTeam.logo;
 
-      // Upload new logo if file exists
       if (logoFile) {
-        const formData = new FormData();
-        formData.append('file', logoFile);
-
-        const uploadResponse = await fetch('http://localhost:3000/api/logo-upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) throw new Error('Logo upload failed');
-        const { url } = await uploadResponse.json();
-        logoUrl = url;
+        const { url: relativeUrl } = await uploadLogo(logoFile, teamId);
+        logoUrl = `http://localhost:3000${relativeUrl}`;
       }
-
-      // Update team data
-      const response = await fetch(`http://localhost:3000/api/teams`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          teamId,
-          name: updatedTeam.name,
-          description: updatedTeam.description,
-          logo: logoUrl,
-        }),
+  
+      const updatedData = await updateTeam({
+        id: teamId,
+        name: updatedTeam.name,
+        description: updatedTeam.description,
+        logo: logoUrl,
       });
-
-      if (!response.ok) throw new Error(`Failed to update team: ${response.statusText}`);
-
-      const updatedData = await response.json();
+  
       setTeam(updatedData);
       setEditing(false);
       setLogoFile(null);
-      setLogoPreview("");
+      setLogoPreview('');
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError(err.message || 'Failed to save changes');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Job Creation Functions
   const handleJobInputChange = (e) => {
     const { name, value } = e.target;
     setNewJob(prev => ({
@@ -147,21 +171,17 @@ const TeamDetailPage = () => {
 
   const handleCreateJob = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const response = await fetch('http://localhost:3000/api/jobs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newJob)
+      setLoading(true);
+      setError(null);
+      
+      const createdJob = await createJob({
+        ...newJob,
+        teamId: teamId,
+        userId: user?.id
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const createdJob = await response.json();
+  
       setJobs(prev => [createdJob, ...prev]);
       setNewJob({
         title: "",
@@ -170,17 +190,25 @@ const TeamDetailPage = () => {
       });
       setShowJobForm(false);
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError(err.message || 'Failed to create job');
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <p>Loading team data...</p>;
-  if (error) return <p className="error">Error: {error}</p>;
+  if(user.role === "ADMIN") 
+    {
+      navigate("/admin");
+      return null;
+    }
+  if (loading) return <Loading />;
+  if (error) return <Error/>;
+  if (!teamId) return <p>No team assigned to this user.</p>;
   if (!team) return <p>No team found.</p>;
 
   return (
     <div className={styles.teamContainer}>
-      {/* Team Editing Section */}
       {editing ? (
         <section className={styles.editTeamForm}>
           <h2>Edit Team Details</h2>
@@ -191,6 +219,7 @@ const TeamDetailPage = () => {
               name="name"
               value={updatedTeam.name}
               onChange={handleTeamInputChange}
+              disabled={loading}
             />
           </label>
           <label>
@@ -199,6 +228,7 @@ const TeamDetailPage = () => {
               name="description"
               value={updatedTeam.description}
               onChange={handleTeamInputChange}
+              disabled={loading}
             />
           </label>
           <label>
@@ -207,6 +237,7 @@ const TeamDetailPage = () => {
               type="file"
               accept="image/*"
               onChange={handleLogoUpload}
+              disabled={loading}
             />
             {logoPreview && (
               <img
@@ -221,24 +252,31 @@ const TeamDetailPage = () => {
               value={updatedTeam.logo}
               onChange={handleTeamInputChange}
               placeholder="Or enter image URL"
+              disabled={loading}
             />
           </label>
+          {error && <p className={styles.error}>{error}</p>}
           <div className={styles.formActions}>
-            <button onClick={handleSaveChanges}>Save Changes</button>
-            <button onClick={handleEditToggle}>Cancel</button>
+            <button onClick={handleSaveChanges} disabled={loading}>
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button onClick={handleEditToggle} disabled={loading}>
+              Cancel
+            </button>
           </div>
         </section>
       ) : (
         <section className={styles.teamInfo}>
-          <h1>{team.name}</h1>
-          <p>{team.description}</p>
           {team.logo && (
             <img
-              src={team.logo}
-              alt={`${team.name} logo`}
-              className={styles.teamLogo}
-            />
+            src={`${team.logo}`}
+            alt={`${team.name} logo`}
+            className={styles.teamLogo}
+          />
           )}
+          <h1>{team.name}</h1>
+          <p>{team.description}</p>
+          
           <button onClick={handleEditToggle}>Edit Team</button>
         </section>
       )}
@@ -248,6 +286,7 @@ const TeamDetailPage = () => {
         <button
           className={styles.toggleJobForm}
           onClick={() => setShowJobForm(!showJobForm)}
+          disabled={loading}
         >
           {showJobForm ? 'Hide Job Form' : 'Create New Job'}
         </button>
@@ -263,6 +302,7 @@ const TeamDetailPage = () => {
                 value={newJob.title}
                 onChange={handleJobInputChange}
                 required
+                disabled={loading}
               />
             </label>
             <label>
@@ -272,11 +312,19 @@ const TeamDetailPage = () => {
                 value={newJob.description}
                 onChange={handleJobInputChange}
                 required
+                disabled={loading}
               />
             </label>
+            {error && <p className={styles.error}>{error}</p>}
             <div className={styles.formActions}>
-              <button type="submit">Create Job</button>
-              <button type="button" onClick={() => setShowJobForm(false)}>
+              <button type="submit" disabled={loading}>
+                {loading ? 'Creating...' : 'Create Job'}
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setShowJobForm(false)}
+                disabled={loading}
+              >
                 Cancel
               </button>
             </div>
@@ -287,30 +335,39 @@ const TeamDetailPage = () => {
       {/* Participants Section */}
       <section className={styles.participantsSection}>
         <h2>Team Members</h2>
-        <ul className={styles.participantsList}>
-          {team.participants?.map((participant) => (
-            <li key={participant.id}>
-              <strong>Email:</strong> {participant.email}
-              <span className={styles.roleBadge}>{participant.role}</span>
-            </li>
-          ))}
-        </ul>
+        {team.participants?.length > 0 ? (
+          <ul className={styles.participantsList}>
+            {team.participants.map((participant) => (
+              <li key={participant.id}>
+                <strong>Email:</strong> {participant.email}
+                <span className={styles.roleBadge}>{participant.role}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No team members found</p>
+        )}
       </section>
 
       {/* Jobs Section */}
       <section className={styles.jobsSection}>
         <h2>Job Openings ({jobs.length})</h2>
-        <div className={styles.jobsGrid}>
-          {jobs.map((job) => (
-            <div key={job.id} className={styles.jobCard}>
-              <h3>{job.title}</h3>
-              <p>{job.description}</p>
-              <div className={styles.jobMeta}>
-                <span>Posted: {new Date(job.createdAt).toLocaleDateString()}</span>
+        {jobs.length > 0 ? (
+          <div className={styles.jobsGrid}>
+            {jobs.map((job) => (
+              <div key={job.id} className={styles.jobCard}>
+                <h3>{job.title}</h3>
+                <p>{job.description}</p>
+                <div className={styles.jobMeta}>
+                  <span>Posted: {new Date(job.createdAt).toLocaleDateString()}</span>
+                  {job.user && <span>Posted by: {job.user.email}</span>}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p>No job openings posted yet</p>
+        )}
       </section>
     </div>
   );

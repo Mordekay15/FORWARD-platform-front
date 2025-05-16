@@ -1,84 +1,101 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+// pages/TeamPage.js
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getTeamById } from '../api/teamApi';
+import Loading from '../components/Loading';
+import styles from './TeamPage.module.css';
 
 const TeamPage = () => {
-  const [teams, setTeams] = useState([]);
-  const [jobs, setJobs] = useState([]);
-  const [teamName, setTeamName] = useState("");
-  const [teamDescription, setTeamDescription] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [selectedTeam, setSelectedTeam] = useState("");
+  const { teamId } = useParams();
+  const navigate = useNavigate();
+  const [team, setTeam] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchTeams();
-  }, []);
+    const fetchTeam = async () => {
+      try {
+        const teamData = await getTeamById(teamId);
+        if (!teamData) {
+          throw new Error('Team not found');
+        }
+        setTeam(teamData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchTeams = async () => {
-    try {
-      const res = await axios.get("/api/team");
-      setTeams(res.data);
-    } catch (error) {
-      console.error("Error fetching teams", error);
-    }
-  };
+    fetchTeam();
+  }, [teamId]);
 
-  const fetchJobs = async (teamId) => {
-    try {
-      const res = await axios.get(`/api/jobs?teamId=${teamId}`);
-      setJobs(res.data);
-    } catch (error) {
-      console.error("Error fetching jobs", error);
-    }
-  };
-
-  const createTeam = async () => {
-    try {
-      const res = await axios.post("/api/team", { name: teamName, description: teamDescription });
-      setTeams([...teams, res.data]);
-      setTeamName("");
-      setTeamDescription("");
-    } catch (error) {
-      console.error("Error creating team", error);
-    }
-  };
-
-  const postJob = async () => {
-    if (!selectedTeam) return alert("Select a team first");
-    try {
-      const res = await axios.post("/api/jobs", { title: jobTitle, description: jobDescription, teamId: selectedTeam });
-      setJobs([...jobs, res.data]);
-      setJobTitle("");
-      setJobDescription("");
-    } catch (error) {
-      console.error("Error posting job", error);
-    }
-  };
+  if (loading) return <Loading />;
+  if (error) return <div className={styles.error}>{error}</div>;
 
   return (
-    <div>
-      <h2>Create a Team</h2>
-      <input type="text" placeholder="Team Name" value={teamName} onChange={(e) => setTeamName(e.target.value)} />
-      <input type="text" placeholder="Description" value={teamDescription} onChange={(e) => setTeamDescription(e.target.value)} />
-      <button onClick={createTeam}>Create Team</button>
+    <div className={styles.teamContainer}>
+      <button onClick={() => navigate('/teams')} className={styles.backButton}>
+        ← Back to All Teams
+      </button>
 
-      <h2>Post a Job</h2>
-      <select onChange={(e) => { setSelectedTeam(e.target.value); fetchJobs(e.target.value); }}>
-        <option value="">Select a Team</option>
-        {teams.map((team) => (
-          <option key={team.id} value={team.id}>{team.name}</option>
-        ))}
-      </select>
-      <input type="text" placeholder="Job Title" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
-      <input type="text" placeholder="Job Description" value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} />
-      <button onClick={postJob}>Post Job</button>
+      <div className={styles.teamHeader}>
+        {team.logo && (
+          <img 
+            src={team.logo} 
+            alt={`${team.name} logo`} 
+            className={styles.teamLogo}
+          />
+        )}
+        <div>
+          <h1>{team.name}</h1>
+          <p className={styles.teamDescription}>{team.description}</p>
+        </div>
+      </div>
 
-      <h2>Jobs</h2>
-      <ul>
-        {jobs.map((job) => (
-          <li key={job.id}>{job.title}: {job.description}</li>
-        ))}
-      </ul>
+      <div className={styles.teamSections}>
+        <section>
+          <h2>Members ({team.participants?.length || 0})</h2>
+          {team.participants?.length > 0 ? (
+            <ul className={styles.membersList}>
+              {team.participants.map(member => (
+                <li key={member.id}>
+                  <span>{member.email}</span>
+                  <span className={styles.roleBadge}>{member.role}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No team members</p>
+          )}
+        </section>
+
+        <section>
+          <h2>Open Positions ({team.jobs?.length || 0})</h2>
+          {team.jobs?.length > 0 ? (
+            <div className={styles.jobsGrid}>
+              {team.jobs.map(job => (
+                <div key={job.id} className={styles.jobCard}>
+                  <h3>{job.title}</h3>
+                  <p>{job.description}</p>
+                  {job.url && (
+                    <a 
+                      href={job.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={styles.jobLink}
+                    >
+                      View Details
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No open positions</p>
+          )}
+        </section>
+      </div>
     </div>
   );
 };

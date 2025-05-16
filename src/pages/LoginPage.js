@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import styles from './LoginPage.module.css';
+import { useAuth } from '../context/AuthContext';
+import { userLogin } from "../api/userApi";
+import defImg from '../fav/defImg.avif';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +13,11 @@ const LoginPage = () => {
   const [jobs, setJobs] = useState([]);
   const [teams, setTeams] = useState([]);
   const navigate = useNavigate();
+  const { token, login } = useAuth();
+
+  useEffect(() => {
+    if (token) navigate('/member');
+  }, [token, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,12 +27,10 @@ const LoginPage = () => {
           axios.get("http://localhost:3000/api/teams")
         ]);
 
-        // Ensure data is always an array
         setJobs(Array.isArray(jobsRes?.data) ? jobsRes.data : []);
         setTeams(Array.isArray(teamsRes?.data) ? teamsRes.data : []);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("Failed to fetch data.");
       }
     };
 
@@ -36,16 +42,13 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
+      const res = await userLogin(email, password);
       const role = res.data.user?.role;
+      const token = res.data.token;
+      const user = res.data.user;
+      sessionStorage.setItem('authToken', token);
+      login({ token, user });
+
       if (role === "ADMIN") {
         navigate("/admin");
       } else if (role === "PARTICIPANT") {
@@ -59,19 +62,26 @@ const LoginPage = () => {
   };
 
   const getTeamLogo = (teamId) => {
-    if (!Array.isArray(teams)) {
-      return "https://via.placeholder.com/50.png?text=Team+Logo";
+    if (!Array.isArray(teams) || !teamId) {
+      return defImg;
     }
 
     const team = teams.find(t => t.id === teamId);
-    return team?.logo || "https://via.placeholder.com/50.png?text=Team+Logo";
+
+    if (!team || !team.logo || team.logo.trim() === "") {
+      return defImg;
+    }
+
+    return team.logo;
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.loginForm}>
-        <h2 className={styles.loginTitle}>Forward Community Login</h2>
-        {error && <p className={styles.errorMessage}>{error}</p>}
+    <div className={styles.adminContainer}>
+      <div className={`${styles.blockSection} ${styles.loginBlock}`}>
+        <h2 className={styles.adminTitle}>Forward Community Login</h2>
+
+        {error && <div className={styles.errorMessage}>{error}</div>}
+
         <form onSubmit={handleLogin} className={styles.form}>
           <input
             type="email"
@@ -79,7 +89,7 @@ const LoginPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className={styles.inputField}
+            className={styles.fileInput}
           />
           <input
             type="password"
@@ -87,27 +97,30 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className={styles.inputField}
+            className={styles.fileInput}
           />
           <button type="submit" className={styles.submitButton}>
             Login
           </button>
         </form>
 
-        {jobs.length > 0 && (
-          <div className={styles.jobsSection}>
-            <h3 className={styles.jobsTitle}>Job Openings</h3>
-            <ul className={styles.jobsList}>
-              {jobs.map((job) => (
-                <li key={job.id} className={styles.jobCard}>
+        <p className={styles.registerPrompt}>
+          Don't have an account? <Link to="/register">Register here</Link>
+        </p>
+      </div>
+
+      {jobs.length > 0 && (
+        <div className={styles.blockSection}>
+          <h3 className={styles.blockTitle}>Available Positions</h3>
+          <div className={styles.listContainer}>
+            {jobs.map((job) => (
+              <div key={job.id} className={styles.listItem}>
+                <div className={styles.jobInfo}>
                   <div className={styles.jobHeader}>
                     <img
                       src={getTeamLogo(job.teamId)}
                       alt="Team Logo"
                       className={styles.teamLogo}
-                      onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/50.png?text=Team+Logo";
-                      }}
                     />
                     <h4 className={styles.jobTitle}>{job.title}</h4>
                   </div>
@@ -115,12 +128,12 @@ const LoginPage = () => {
                   <p className={styles.jobMeta}>
                     Posted: {new Date(job.createdAt).toLocaleDateString()}
                   </p>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

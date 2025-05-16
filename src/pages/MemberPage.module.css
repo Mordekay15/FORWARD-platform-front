@@ -1,206 +1,139 @@
-/* Team Container */
 .teamContainer {
-  max-width: 1200px;
-  margin: 0 auto;
+  background: url('../fav/background.avif') center/cover no-repeat fixed;
+  min-height: 100vh;
   padding: 2rem;
-  color: #000;
-  background: black;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-/* Edit Team Form */
-.editTeamForm {
-  background: #99ff48;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+.teamInfo {
+  display: flex;
+  align-items: center;
+  gap: 2rem; 
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.editTeamForm label {
-  display: block;
-  margin: 1rem 0 0.5rem;
-  font-weight: 600;
-  color: #333;
+.teamLogo {
+  max-width: 150px;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.editTeamForm input,
-.editTeamForm textarea {
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+.teamInfo div {
+  flex: 1;
+}
+
+h1, h2, h3 {
   margin-bottom: 1rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
+  color: #fff;
 }
 
-.editTeamForm input:focus,
-.editTeamForm textarea:focus {
-  border-color: #99ff48; /* Updated focus color */
+.teamInfo .description {
+  margin-top: 1rem; 
+  color: #ccc; 
+  font-size: 1rem;
+}
+
+/* Buttons */
+button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgb(151, 247, 71);
+  color: black;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: rgb(151, 247, 71);
+}
+
+input[type="text"],
+input[type="file"],
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+}
+
+input[type="text"]:focus,
+textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(153, 255, 72, 0.2); /* Updated glow */
+  box-shadow: 0 0 0 2px rgb(151, 247, 71);
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 1rem;
 }
 
 .formActions {
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  justify-content: flex-end;
 }
 
-/* Team Info Section */
-.teamInfo {
-  background: #99ff48;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
-}
-
-.teamInfo img {
-  max-width: 200px;
-  margin: 1rem 0;
-  border-radius: 8px;
-  border: 2px solid #eee;
-}
-
-/* Job Creation Section */
-.jobCreationSection {
-  margin: 2rem 0;
-  padding: 2rem;
-  background: #99ff48;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.jobForm {
-  margin-top: 1rem;
-}
-
-.jobForm label {
-  display: block;
-  margin: 1rem 0 0.5rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.jobForm input,
-.jobForm textarea {
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.jobForm input:focus,
-.jobForm textarea:focus {
-  border-color: #99ff48; /* Updated focus color */
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(153, 255, 72, 0.2); /* Updated glow */
-}
-
-/* Participants Section */
-.participantsSection {
-  margin: 2rem 0;
-  padding: 2rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.logoPreview {
+  max-width: 150px;
+  height: auto;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 .participantsList {
   list-style: none;
   padding: 0;
-  margin: 1rem 0;
+  margin-top: 1rem;
 }
 
 .participantsList li {
+  background: rgba(255, 255, 255, 0.1);
   padding: 1rem;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.3s ease;
-}
-
-.participantsList li:hover {
-  background: #f8f9fa;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .roleBadge {
-  background: rgba(153, 255, 72, 0.1); /* Updated light green */
-  color: #000; /* Black text */
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* Jobs Section */
-.jobsSection {
-  margin: 2rem 0;
-  padding: 2rem;
-  background: #99ff48;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #10b981;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 1rem;
+  color: white;
+  font-size: 0.875rem;
 }
 
 .jobsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-  margin-top: 1rem;
 }
 
 .jobCard {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
   padding: 1.5rem;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  background: white;
-}
-
-.jobCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .jobMeta {
-  margin-top: 1rem;
-  color: #666;
-  font-size: 0.9rem;
-  border-top: 1px solid #eee;
-  padding-top: 1rem;
+  font-size: 0.875rem;
+  color: #ccc;
 }
 
-/* Buttons */
-.formActions button {
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.formActions button[type="submit"] {
-  background: #99ff48; /* Updated primary color */
-  color: #000;
-}
-
-.formActions button[type="submit"]:hover {
-  background: #8ce642; /* Slightly darker variant */
-  transform: translateY(-2px);
-}
-
-.formActions button[type="button"] {
-  background: #333;
-  color: white;
-}
-
-.formActions button[type="button"]:hover {
-  background: #000;
-  transform: translateY(-2px);
+.jobMeta span {
+  display: block;
 }
